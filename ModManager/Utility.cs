@@ -143,7 +143,7 @@ public static class Utility
                     // Seçilen dosyanın yolu
                     string selectedFilePath = openFileDialog.FileName;
                     Random random = new Random();
-                    int randomNumber = random.Next(100, 9999); // 100 ile 999 arasında rastgele bir sayı
+                    int randomNumber = random.Next(100, 9999);
                     string downloadedFileName = $"rdr2modinstaller-{randomNumber}.rar";
                     // API'den dosyayı indir
                     button.Text = "Kuruluyor...";
@@ -156,30 +156,25 @@ public static class Utility
                         File.WriteAllBytes(downloadedFilePath, fileData);
                     }
 
-                    // RAR dosyasını çıkart
-                    string extractPath = Path.GetDirectoryName(selectedFilePath); // Oyunun bulunduğu konum
+                    string extractPath = Path.GetDirectoryName(selectedFilePath);
                     using (var archive = RarArchive.Open(downloadedFilePath))
                     {
                         foreach (var entry in archive.Entries)
                         {
-                            // Dosyanın tam yolu
                             string entryFullPath = Path.Combine(extractPath, entry.Key);
 
-                            // Klasörü oluştur
                             if (entry.IsDirectory)
                             {
                                 Directory.CreateDirectory(entryFullPath);
                             }
                             else
                             {
-                                // Klasörleri oluştur
                                 string entryDirectory = Path.GetDirectoryName(entryFullPath);
                                 if (!Directory.Exists(entryDirectory))
                                 {
                                     Directory.CreateDirectory(entryDirectory);
                                 }
 
-                                // Dosyayı çıkart
                                 if (!entry.IsDirectory)
                                 {
                                     using (Stream entryStream = entry.OpenEntryStream())
@@ -188,14 +183,12 @@ public static class Utility
                                         entryStream.CopyTo(fileStream);
                                     }
 
-                                    // Dosyanın değiştirilme tarihini orijinal tarihine ayarla
                                     if (entry.LastModifiedTime.HasValue)
                                     {
                                         File.SetLastWriteTime(entryFullPath, entry.LastModifiedTime.Value);
                                     }
                                     else
                                     {
-                                        // Eğer LastModifiedTime null ise, dosyanın değiştirilme tarihini şu anki zamana ayarla
                                         File.SetLastWriteTime(entryFullPath, DateTime.Now);
                                     }
                                 }
@@ -213,84 +206,6 @@ public static class Utility
             MessageBox.Show($"Hata oluştu: {ex.Message}");
         }
     }
-
-    /*public static async void MODInstall(string apiURL, Button button)
-    {
-        try
-        {
-            // Kullanıcıdan bir dosya seçmesini iste
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "PlayRDR2 Executable|PlayRDR2.exe";
-                openFileDialog.Title = "Select PlayRDR2.exe File";
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    // Seçilen dosyanın yolu
-                    string selectedFilePath = openFileDialog.FileName;
-                    Random random = new Random();
-                    int randomNumber = random.Next(100, 9999); // 100 ile 999 arasında rastgele bir sayı
-                    string downloadedFileName = $"rdr2modinstaller-{randomNumber}.rar";
-                    // API'den dosyayı indir
-                    button.Text = "Kuruluyor...";
-                    button.Enabled = false;
-                    string downloadedFilePath = Path.Combine(Path.GetTempPath(), downloadedFileName);
-
-                    using (HttpClient client = new HttpClient())
-                    {
-                        byte[] fileData = await client.GetByteArrayAsync(apiURL);
-                        File.WriteAllBytes(downloadedFilePath, fileData);
-                    }
-
-                    // RAR dosyasını çıkart
-                    string extractPath = Path.GetDirectoryName(selectedFilePath); // Oyunun bulunduğu konum
-                    using (var archive = RarArchive.Open(downloadedFilePath))
-                    {
-                        foreach (var entry in archive.Entries)
-                        {
-                            // Dosyanın tam yolu
-                            string entryFullPath = Path.Combine(extractPath, entry.Key);
-
-                            // Klasörleri oluştur
-                            string entryDirectory = Path.GetDirectoryName(entryFullPath);
-                            if (!Directory.Exists(entryDirectory))
-                            {
-                                Directory.CreateDirectory(entryDirectory);
-                            }
-
-                            // Dosyayı çıkart
-                            if (!entry.IsDirectory)
-                            {
-                                using (Stream entryStream = entry.OpenEntryStream())
-                                using (FileStream fileStream = File.Open(entryFullPath, FileMode.Create, FileAccess.Write))
-                                {
-                                    entryStream.CopyTo(fileStream);
-                                }
-
-                                // Dosyanın değiştirilme tarihini orijinal tarihine ayarla
-                                if (entry.LastModifiedTime.HasValue)
-                                {
-                                    File.SetLastWriteTime(entryFullPath, entry.LastModifiedTime.Value);
-                                }
-                                else
-                                {
-                                    // Eğer LastModifiedTime null ise, dosyanın değiştirilme tarihini şu anki zamana ayarla
-                                    File.SetLastWriteTime(entryFullPath, DateTime.Now);
-                                }
-                            }
-                        }
-                    }
-                    button.Text = "Kur";
-                    button.Enabled = true;
-                    MessageBox.Show("Başarıyla kuruldu!");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Hata oluştu: {ex.Message}");
-        }
-    }*/
 
     public static async void MODUninstall(string apiURL, Button button)
     {
@@ -355,39 +270,32 @@ public static class Utility
             string tempDownloadPath = Path.Combine(Path.GetTempPath(), "ModManagerUpdate.rar");
             string currentExePath = Application.ExecutablePath;
 
-            // RAR dosyasını indir
             using (HttpClient client = new HttpClient())
             {
                 byte[] fileData = await client.GetByteArrayAsync(apiURL);
                 File.WriteAllBytes(tempDownloadPath, fileData);
             }
 
-            // Yeni dosyanın adını belirle
             string newFileName = $"ModManagerV{version}.exe";
 
-            // Yeni dosyanın tam yolu
             string newFilePath = Path.Combine(Path.GetDirectoryName(currentExePath), newFileName);
 
-            // ModManager.exe'yi çıkartma
             using (var archive = SharpCompress.Archives.Rar.RarArchive.Open(tempDownloadPath))
             {
                 foreach (var entry in archive.Entries)
                 {
-                    // Dosyayı çıkart ve yeni adını kullan
                     using (Stream entryStream = entry.OpenEntryStream())
                     using (FileStream fileStream = File.Open(newFilePath, FileMode.Create, FileAccess.Write))
                     {
                         entryStream.CopyTo(fileStream);
                     }
 
-                    // Dosyanın değiştirilme tarihini orijinal tarihine ayarla
                     if (entry.LastModifiedTime.HasValue)
                     {
                         File.SetLastWriteTime(newFilePath, entry.LastModifiedTime.Value);
                     }
                     else
                     {
-                        // Eğer LastModifiedTime null ise, dosyanın değiştirilme tarihini şu anki zamana ayarla
                         File.SetLastWriteTime(newFilePath, DateTime.Now);
                     }
                 }
@@ -413,7 +321,6 @@ public static class Utility
             {
                 string fileName = Path.GetFileName(filePath);
 
-                // Sadece mevcut uygulamadan farklı dosyaları sil
                 if (!string.Equals(fileName, currentExeName, StringComparison.OrdinalIgnoreCase))
                 {
                     File.Delete(filePath);
