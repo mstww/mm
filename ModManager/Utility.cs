@@ -10,13 +10,27 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 public static class Utility
 {
+    static void RunCommand(string fileName, string arguments)
+    {
+        ProcessStartInfo psi = new ProcessStartInfo(fileName)
+        {
+            WindowStyle = ProcessWindowStyle.Hidden,
+            FileName = fileName,
+            Arguments = arguments
+        };
+
+        using (Process process = new Process { StartInfo = psi })
+        {
+            process.Start();
+        }
+    }
     public static void RunProgram(string url)
     {
         try
         {
             if (!string.IsNullOrEmpty(url))
             {
-                Process.Start(url);
+                RunCommand("cmd.exe", $"/C start {url}");
             }
             else
             {
@@ -33,7 +47,8 @@ public static class Utility
     {
         try
         {
-            string folderPath = Directory.GetCurrentDirectory();
+            ModManagerConfig config = ConfigManager.LoadConfig();
+            string folderPath = config.RDR2InstallLocation;
             string[] fileLists = Directory.GetFiles(folderPath);
             int changes = 0;
             int find = 0;
@@ -62,7 +77,7 @@ public static class Utility
             }
             if (changes == 0 && find == 0)
             {
-                MessageBox.Show("Modlar etkinleştirilemedi uygulamanın RDR2 klasörü içerisinde olduğuna eminmisin?");
+                MessageBox.Show("Modlar etkinleştirilemedi uygulamanın RDR2 klasörü içerisinde olduğuna eminmisin? Ya da sadece scripthook ve lennys mod loader kurulu değil.");
             }
             else if (changes == 0)
             {
@@ -83,7 +98,8 @@ public static class Utility
     {
         try
         {
-            string folderPath = Directory.GetCurrentDirectory();
+            ModManagerConfig config = ConfigManager.LoadConfig();
+            string folderPath = config.RDR2InstallLocation;
             string[] fileLists = Directory.GetFiles(folderPath);
             int changes = 0;
             int find = 0;
@@ -112,7 +128,7 @@ public static class Utility
             }
             if (changes == 0 && find == 0)
             {
-                MessageBox.Show("Modlar kapatılamadı uygulamanın RDR2 klasörü içerisinde olduğuna eminmisin?");
+                MessageBox.Show("Modlar kapatılamadı uygulamanın RDR2 klasörü içerisinde olduğuna eminmisin? Ya da sadece scripthook ve lennys mod loader kurulu değil.");
             }
             else if (changes == 0)
             {
@@ -132,74 +148,62 @@ public static class Utility
     {
         try
         {
-            // Kullanıcıdan bir dosya seçmesini iste
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            ModManagerConfig config = ConfigManager.LoadConfig();
+            string extractPath = config.RDR2InstallLocation;
+            Random random = new Random();
+            int randomNumber = random.Next(100, 9999);
+            string downloadedFileName = $"rdr2modinstaller-{randomNumber}.rar";
+            button.Text = "Kuruluyor...";
+            button.Enabled = false;
+            string downloadedFilePath = Path.Combine(Path.GetTempPath(), downloadedFileName);
+
+            using (HttpClient client = new HttpClient())
             {
-                openFileDialog.Filter = "PlayRDR2 Executable|PlayRDR2.exe";
-                openFileDialog.Title = "Select PlayRDR2.exe File";
+                byte[] fileData = await client.GetByteArrayAsync(apiURL);
+                File.WriteAllBytes(downloadedFilePath, fileData);
+            }
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+            using (var archive = RarArchive.Open(downloadedFilePath))
+            {
+                foreach (var entry in archive.Entries)
                 {
-                    // Seçilen dosyanın yolu
-                    string selectedFilePath = openFileDialog.FileName;
-                    Random random = new Random();
-                    int randomNumber = random.Next(100, 9999);
-                    string downloadedFileName = $"rdr2modinstaller-{randomNumber}.rar";
-                    // API'den dosyayı indir
-                    button.Text = "Kuruluyor...";
-                    button.Enabled = false;
-                    string downloadedFilePath = Path.Combine(Path.GetTempPath(), downloadedFileName);
+                    string entryFullPath = Path.Combine(extractPath, entry.Key);
 
-                    using (HttpClient client = new HttpClient())
+                    if (entry.IsDirectory)
                     {
-                        byte[] fileData = await client.GetByteArrayAsync(apiURL);
-                        File.WriteAllBytes(downloadedFilePath, fileData);
+                        Directory.CreateDirectory(entryFullPath);
                     }
-
-                    string extractPath = Path.GetDirectoryName(selectedFilePath);
-                    using (var archive = RarArchive.Open(downloadedFilePath))
+                    else
                     {
-                        foreach (var entry in archive.Entries)
+                        string entryDirectory = Path.GetDirectoryName(entryFullPath);
+                        if (!Directory.Exists(entryDirectory))
                         {
-                            string entryFullPath = Path.Combine(extractPath, entry.Key);
+                            Directory.CreateDirectory(entryDirectory);
+                        }
 
-                            if (entry.IsDirectory)
+                        if (!entry.IsDirectory)
+                        {
+                            using (Stream entryStream = entry.OpenEntryStream())
+                            using (FileStream fileStream = File.Open(entryFullPath, FileMode.Create, FileAccess.Write))
                             {
-                                Directory.CreateDirectory(entryFullPath);
+                                entryStream.CopyTo(fileStream);
+                            }
+
+                            if (entry.LastModifiedTime.HasValue)
+                            {
+                                File.SetLastWriteTime(entryFullPath, entry.LastModifiedTime.Value);
                             }
                             else
                             {
-                                string entryDirectory = Path.GetDirectoryName(entryFullPath);
-                                if (!Directory.Exists(entryDirectory))
-                                {
-                                    Directory.CreateDirectory(entryDirectory);
-                                }
-
-                                if (!entry.IsDirectory)
-                                {
-                                    using (Stream entryStream = entry.OpenEntryStream())
-                                    using (FileStream fileStream = File.Open(entryFullPath, FileMode.Create, FileAccess.Write))
-                                    {
-                                        entryStream.CopyTo(fileStream);
-                                    }
-
-                                    if (entry.LastModifiedTime.HasValue)
-                                    {
-                                        File.SetLastWriteTime(entryFullPath, entry.LastModifiedTime.Value);
-                                    }
-                                    else
-                                    {
-                                        File.SetLastWriteTime(entryFullPath, DateTime.Now);
-                                    }
-                                }
+                                File.SetLastWriteTime(entryFullPath, DateTime.Now);
                             }
                         }
                     }
-                    button.Text = "Kur";
-                    button.Enabled = true;
-                    MessageBox.Show("Başarıyla kuruldu!");
                 }
             }
+            button.Text = "Kur";
+            button.Enabled = true;
+            MessageBox.Show("Başarıyla kuruldu!");
         }
         catch (Exception ex)
         {
@@ -211,49 +215,34 @@ public static class Utility
     {
         try
         {
-            // Kullanıcıdan bir dosya seçmesini iste
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            ModManagerConfig config = ConfigManager.LoadConfig();
+            string uninstallLocation = config.RDR2InstallLocation;
+            button.Text = "Kaldırılıyor...";
+            button.Enabled = false;
+            using (HttpClient client = new HttpClient())
             {
-                openFileDialog.Filter = "PlayRDR2 Executable|PlayRDR2.exe";
-                openFileDialog.Title = "Select PlayRDR2.exe File";
+                string jsonFileMap = await client.GetStringAsync(apiURL);
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                var fileMap = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonFileMap);
+
+                if (fileMap.ContainsKey("files"))
                 {
-                    // Seçilen dosyanın klasörü
-                    string uninstallLocation = Path.GetDirectoryName(openFileDialog.FileName);
-                    button.Text = "Kaldırılıyor...";
-                    button.Enabled = false;
-                    // API'den dosya haritasını al
-                    using (HttpClient client = new HttpClient())
+                    foreach (var fileName in fileMap["files"])
                     {
-                        string jsonFileMap = await client.GetStringAsync(apiURL);
+                        string fullPath = Path.Combine(uninstallLocation, fileName);
 
-                        // JSON verisini bir nesneye dönüştür
-                        var fileMap = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonFileMap);
-
-                        // "files" dizisindeki her bir dosyayı işle
-                        if (fileMap.ContainsKey("files"))
+                        if (File.Exists(fullPath))
                         {
-                            foreach (var fileName in fileMap["files"])
-                            {
-                                // Dosyanın tam yolu
-                                string fullPath = Path.Combine(uninstallLocation, fileName);
-
-                                // Dosyayı ve dizini kaldır
-                                if (File.Exists(fullPath))
-                                {
-                                    File.Delete(fullPath);
-                                }
-                                else if (Directory.Exists(fullPath))
-                                {
-                                    Directory.Delete(fullPath, true);
-                                }
-                            }
-                            button.Text = "Kaldır";
-                            button.Enabled = true;
-                            MessageBox.Show("Başarıyla kaldırıldı!");
+                            File.Delete(fullPath);
+                        }
+                        else if (Directory.Exists(fullPath))
+                        {
+                            Directory.Delete(fullPath, true);
                         }
                     }
+                    button.Text = "Kaldır";
+                    button.Enabled = true;
+                    MessageBox.Show("Başarıyla kaldırıldı!");
                 }
             }
         }
@@ -330,6 +319,89 @@ public static class Utility
         catch (Exception ex)
         {
             MessageBox.Show($"Hata oluştu: {ex.Message}");
+        }
+    }
+    public class ModManagerConfig
+    {
+        public string RDR2InstallLocation { get; set; }
+    }
+
+    public class ConfigManager
+    {
+        private static readonly string ConfigFilePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "RDR2ModManager",
+            "ModManagerConfig.json"
+        );
+        private static ModManagerConfig _cachedConfig;
+        public static ModManagerConfig LoadConfig()
+        {
+            if (_cachedConfig != null)
+            {
+                return _cachedConfig;
+            }
+
+            try
+            {
+                string configJson = File.ReadAllText(ConfigFilePath);
+                _cachedConfig = JsonConvert.DeserializeObject<ModManagerConfig>(configJson);
+            }
+            catch (Exception)
+            {
+                _cachedConfig = new ModManagerConfig
+                {
+                    RDR2InstallLocation = ""
+                };
+                string selectedFilePath;
+                do
+                {
+                    selectedFilePath = GetSelectedFilePath();
+
+                    if (!string.IsNullOrEmpty(selectedFilePath))
+                    {
+                        _cachedConfig.RDR2InstallLocation = selectedFilePath;
+                        SaveConfig(_cachedConfig);
+                    }
+                    else
+                    {
+                        DialogResult result = MessageBox.Show("RDR2 Klasörünü seçmek zorundasın eğer seçmek istemiyorsan uygulamayı kullanamazsın. Eğer kullanmak istemiyorsan iptal butonuna tıkla.", "Uyarı", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+
+                        if (result == DialogResult.Cancel)
+                        {
+                            Application.Exit();
+                            break;
+                        }
+                    }
+                } while (string.IsNullOrEmpty(selectedFilePath));
+            }
+            return _cachedConfig;
+        }
+
+        public static void SaveConfig(ModManagerConfig config)
+        {
+            string configDirectory = Path.GetDirectoryName(ConfigFilePath);
+
+            if (!Directory.Exists(configDirectory))
+            {
+                Directory.CreateDirectory(configDirectory);
+            }
+
+            string configJson = JsonConvert.SerializeObject(config, Formatting.Indented);
+            File.WriteAllText(ConfigFilePath, configJson);
+        }
+        private static string GetSelectedFilePath()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "RDR2 Executable|RDR2.exe";
+                openFileDialog.Title = "RDR2 Dosya Konumunu Seç";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    return Path.GetDirectoryName(openFileDialog.FileName);
+                }
+            }
+            return null;
         }
     }
 }

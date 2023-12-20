@@ -11,5 +11,5 @@
 	<Var name="HideStrings" value="true" />
 	<Var name="OptimizeMethods" value="true" />
 	<Var name="SuppressIldasm" value="true" />
-	<Module file="$(InPath)\ModManager.exe" />
+	<Module file="$(InPath)\app.publish\ModManager.exe" />
 </Obfuscator>

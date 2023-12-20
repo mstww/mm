@@ -70,5 +70,19 @@ namespace ModManager
         {
             Utility.MODUninstall("https://api.sypnex.net/file?q=filemap&filename=trfont", FontFixNewUninstall);
         }
+
+        private void LmlCRInstall_Click(object sender, EventArgs e)
+        {
+            Utility.MODInstall("https://api.sypnex.net/file?q=download&filename=lmlcr", LmlCRInstall);
+        }
+
+        private void LmlCRUninstall_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Bu işlem lml klasörü içerisindeki modları tamamen silecektir devam etmek istiyormusunuz?", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                Utility.MODUninstall("https://api.sypnex.net/file?q=filemap&filename=lmlcr", LmlCRUninstall);
+            }
+        }
     }
 }

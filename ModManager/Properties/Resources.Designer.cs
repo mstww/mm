@@ -113,6 +113,16 @@ namespace ModManager.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
         /// </summary>
+        internal static System.Drawing.Bitmap lml2 {
+            get {
+                object obj = ResourceManager.GetObject("lml2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
+        /// </summary>
         internal static System.Drawing.Bitmap scripthook {
             get {
                 object obj = ResourceManager.GetObject("scripthook", resourceCulture);

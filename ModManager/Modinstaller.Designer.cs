@@ -39,6 +39,8 @@
             this.FontFixInstall = new System.Windows.Forms.Button();
             this.FontFixNewUninstall = new System.Windows.Forms.Button();
             this.FontFixNewInstall = new System.Windows.Forms.Button();
+            this.LmlCRUninstall = new System.Windows.Forms.Button();
+            this.LmlCRInstall = new System.Windows.Forms.Button();
             this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
@@ -162,6 +164,27 @@
             this.FontFixNewInstall.UseVisualStyleBackColor = true;
             this.FontFixNewInstall.Click += new System.EventHandler(this.FontFixNewInstall_Click);
             // 
+            // LmlCRUninstall
+            // 
+            this.LmlCRUninstall.Location = new System.Drawing.Point(557, 134);
+            this.LmlCRUninstall.Name = "LmlCRUninstall";
+            this.LmlCRUninstall.Size = new System.Drawing.Size(95, 25);
+            this.LmlCRUninstall.TabIndex = 19;
+            this.LmlCRUninstall.Text = "Kaldır";
+            this.LmlCRUninstall.UseVisualStyleBackColor = true;
+            this.LmlCRUninstall.Click += new System.EventHandler(this.LmlCRUninstall_Click);
+            // 
+            // LmlCRInstall
+            // 
+            this.LmlCRInstall.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.LmlCRInstall.Location = new System.Drawing.Point(460, 134);
+            this.LmlCRInstall.Name = "LmlCRInstall";
+            this.LmlCRInstall.Size = new System.Drawing.Size(95, 25);
+            this.LmlCRInstall.TabIndex = 18;
+            this.LmlCRInstall.Text = "Kur";
+            this.LmlCRInstall.UseVisualStyleBackColor = true;
+            this.LmlCRInstall.Click += new System.EventHandler(this.LmlCRInstall_Click);
+            // 
             // pictureBox8
             // 
             this.pictureBox8.BackgroundImage = global::ModManager.Properties.Resources.fontfixnew;
@@ -201,13 +224,12 @@
             // 
             // pictureBox4
             // 
-            this.pictureBox4.BackgroundImage = global::ModManager.Properties.Resources.tryama;
+            this.pictureBox4.BackgroundImage = global::ModManager.Properties.Resources.lml2;
             this.pictureBox4.Location = new System.Drawing.Point(460, 20);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(192, 108);
             this.pictureBox4.TabIndex = 5;
             this.pictureBox4.TabStop = false;
-            this.pictureBox4.Visible = false;
             // 
             // pictureBox3
             // 
@@ -242,6 +264,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 501);
+            this.Controls.Add(this.LmlCRUninstall);
+            this.Controls.Add(this.LmlCRInstall);
             this.Controls.Add(this.FontFixNewUninstall);
             this.Controls.Add(this.FontFixNewInstall);
             this.Controls.Add(this.pictureBox8);
@@ -298,5 +322,7 @@
         private System.Windows.Forms.Button FontFixNewUninstall;
         private System.Windows.Forms.Button FontFixNewInstall;
         private System.Windows.Forms.PictureBox pictureBox8;
+        private System.Windows.Forms.Button LmlCRUninstall;
+        private System.Windows.Forms.Button LmlCRInstall;
     }
 }

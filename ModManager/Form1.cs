@@ -23,7 +23,7 @@ namespace ModManager
         }
         public static class AppInfo
         {
-            public static string Version = "1.1.2";
+            public static string Version = "1.1.3";
         }
         private async void CheckForUpdates()
         {
@@ -39,13 +39,16 @@ namespace ModManager
                     if (result == DialogResult.Yes)
                     {
                         await Utility.Update(latestVersion);
-                        System.Environment.Exit(0);
+                        Application.Exit();
                     }
                     else
-                    { System.Environment.Exit(0); }
+                    { Application.Exit(); }
                 }
                 else
-                { EnableControls(this); }
+                { 
+                    EnableControls(this);
+                    Utility.ConfigManager.LoadConfig();
+                }
             }
             catch (Exception ex)
             {
