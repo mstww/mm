@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -323,6 +324,7 @@ public static class Utility
     }
     public class ModManagerConfig
     {
+        [Obfuscation(Exclude = true, Feature = "renaming")]
         public string RDR2InstallLocation { get; set; }
     }
 
@@ -331,7 +333,7 @@ public static class Utility
         private static readonly string ConfigFilePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RDR2ModManager",
-            "ModManagerConfig.json"
+            "ModManagerConfigV2.json"
         );
         private static ModManagerConfig _cachedConfig;
         public static ModManagerConfig LoadConfig()

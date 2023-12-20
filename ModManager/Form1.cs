@@ -23,7 +23,7 @@ namespace ModManager
         }
         public static class AppInfo
         {
-            public static string Version = "1.1.3";
+            public static string Version = "1.1.4";
         }
         private async void CheckForUpdates()
         {
