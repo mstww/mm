@@ -127,6 +127,9 @@
   <data name="scripthook" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\scripthook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="lml2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\lml2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="GAME_PATH_FOTO" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\GAME_PATH_FOTO.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -139,7 +142,7 @@
   <data name="fontfixnew" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fontfixnew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="lml2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lml2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Rampage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Rampage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -49,6 +49,9 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
+            this.rampageuninstall = new System.Windows.Forms.Button();
+            this.rampageinstall = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
@@ -57,6 +60,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             this.SuspendLayout();
             // 
             // scripthookinstall
@@ -259,11 +263,44 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // pictureBox9
+            // 
+            this.pictureBox9.BackgroundImage = global::ModManager.Properties.Resources.Rampage;
+            this.pictureBox9.Location = new System.Drawing.Point(680, 180);
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.Size = new System.Drawing.Size(192, 108);
+            this.pictureBox9.TabIndex = 20;
+            this.pictureBox9.TabStop = false;
+            // 
+            // rampageuninstall
+            // 
+            this.rampageuninstall.Location = new System.Drawing.Point(777, 294);
+            this.rampageuninstall.Name = "rampageuninstall";
+            this.rampageuninstall.Size = new System.Drawing.Size(95, 25);
+            this.rampageuninstall.TabIndex = 22;
+            this.rampageuninstall.Text = "Kaldır";
+            this.rampageuninstall.UseVisualStyleBackColor = true;
+            this.rampageuninstall.Click += new System.EventHandler(this.Rampageuninstall_Click);
+            // 
+            // rampageinstall
+            // 
+            this.rampageinstall.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rampageinstall.Location = new System.Drawing.Point(680, 294);
+            this.rampageinstall.Name = "rampageinstall";
+            this.rampageinstall.Size = new System.Drawing.Size(95, 25);
+            this.rampageinstall.TabIndex = 21;
+            this.rampageinstall.Text = "Kur";
+            this.rampageinstall.UseVisualStyleBackColor = true;
+            this.rampageinstall.Click += new System.EventHandler(this.Rampageinstall_Click);
+            // 
             // Modinstaller
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 501);
+            this.Controls.Add(this.rampageuninstall);
+            this.Controls.Add(this.rampageinstall);
+            this.Controls.Add(this.pictureBox9);
             this.Controls.Add(this.LmlCRUninstall);
             this.Controls.Add(this.LmlCRInstall);
             this.Controls.Add(this.FontFixNewUninstall);
@@ -298,6 +335,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -324,5 +362,8 @@
         private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.Button LmlCRUninstall;
         private System.Windows.Forms.Button LmlCRInstall;
+        private System.Windows.Forms.PictureBox pictureBox9;
+        private System.Windows.Forms.Button rampageuninstall;
+        private System.Windows.Forms.Button rampageinstall;
     }
 }

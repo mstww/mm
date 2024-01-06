@@ -307,6 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\Rampage.png" />
     <None Include="Resources\lml2.png" />
     <None Include="Resources\fontfixnew.png" />
     <None Include="Resources\fontfixold.png" />

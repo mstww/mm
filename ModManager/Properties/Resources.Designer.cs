@@ -123,6 +123,16 @@ namespace ModManager.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
         /// </summary>
+        internal static System.Drawing.Bitmap Rampage {
+            get {
+                object obj = ResourceManager.GetObject("Rampage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
+        /// </summary>
         internal static System.Drawing.Bitmap scripthook {
             get {
                 object obj = ResourceManager.GetObject("scripthook", resourceCulture);

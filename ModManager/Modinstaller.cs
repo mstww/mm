@@ -84,5 +84,15 @@ namespace ModManager
                 Utility.MODUninstall("https://api.sypnex.net/file?q=filemap&filename=lmlcr", LmlCRUninstall);
             }
         }
+
+        private void Rampageinstall_Click(object sender, EventArgs e)
+        {
+            Utility.MODInstall("https://api.sypnex.net/file?q=download&filename=rampage", rampageinstall);
+        }
+
+        private void Rampageuninstall_Click(object sender, EventArgs e)
+        {
+            Utility.MODUninstall("https://api.sypnex.net/file?q=filemap&filename=rampage", rampageuninstall);
+        }
     }
 }
