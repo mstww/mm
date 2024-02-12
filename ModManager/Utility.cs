@@ -56,8 +56,8 @@ public static class Utility
             foreach (string filePath in fileLists)
             {
                 string fileName = Path.GetFileName(filePath);
-                string[] oldNames = { "dinput8dll", "versiondll", "ScriptHookRDR2dll", "SimpleHookdll", "ModManager.Coredll", "NativeInteropdll", "EasyLoad64dll", "EasyHook64dll", "EasyHookdll" };
-                string[] newNames = { "dinput8.dll", "version.dll", "ScriptHookRDR2.dll", "SimpleHook.dll", "ModManager.Core.dll", "NativeInterop.dll", "EasyLoad64.dll", "EasyHook64.dll", "EasyHook.dll" };
+                string[] oldNames = { "dinput8dll", "versiondll", "ScriptHookRDR2dll", "SimpleHookdll", "ModManager.Coredll", "NativeInteropdll", "EasyLoad64dll", "EasyHook64dll", "EasyHookdll", "NLogdll" };
+                string[] newNames = { "dinput8.dll", "version.dll", "ScriptHookRDR2.dll", "SimpleHook.dll", "ModManager.Core.dll", "NativeInterop.dll", "EasyLoad64.dll", "EasyHook64.dll", "EasyHook.dll", "NLog.dll" };
                 for (int i = 0; i < oldNames.Length && i < newNames.Length; i++)
                 {
                     string oldName = oldNames[i];
@@ -67,7 +67,14 @@ public static class Utility
                         string newFileName = fileName.Replace(oldName, newName);
                         string newFilePath = Path.Combine(folderPath, newFileName);
 
-                        File.Move(filePath, newFilePath);
+                        // Dosyayı kopyala
+                        File.Copy(filePath, newFilePath, true);
+                        // Eğer kopyalama işlemi başarılı olduysa eski dosyayı sil
+                        if (File.Exists(newFilePath))
+                        {
+                            File.Delete(filePath);
+                        }
+
                         changes++;
                     }
                     else if (fileName.Contains(newName))
@@ -78,7 +85,7 @@ public static class Utility
             }
             if (changes == 0 && find == 0)
             {
-                MessageBox.Show("Modlar etkinleştirilemedi uygulamanın RDR2 klasörü içerisinde olduğuna eminmisin? Ya da sadece scripthook ve lennys mod loader kurulu değil.");
+                MessageBox.Show("Modlar etkinleştirilemedi, scripthook ve lennys mod loader'in kurulu olduğuna eminmisin?");
             }
             else if (changes == 0)
             {
@@ -107,8 +114,8 @@ public static class Utility
             foreach (string filePath in fileLists)
             {
                 string fileName = Path.GetFileName(filePath);
-                string[] newNames = { "dinput8dll", "versiondll", "ScriptHookRDR2dll", "SimpleHookdll", "ModManager.Coredll", "NativeInteropdll", "EasyLoad64dll", "EasyHook64dll", "EasyHookdll" };
-                string[] oldNames = { "dinput8.dll", "version.dll", "ScriptHookRDR2.dll", "SimpleHook.dll", "ModManager.Core.dll", "NativeInterop.dll", "EasyLoad64.dll", "EasyHook64.dll", "EasyHook.dll" };
+                string[] newNames = { "dinput8dll", "versiondll", "ScriptHookRDR2dll", "SimpleHookdll", "ModManager.Coredll", "NativeInteropdll", "EasyLoad64dll", "EasyHook64dll", "EasyHookdll", "NLogdll" };
+                string[] oldNames = { "dinput8.dll", "version.dll", "ScriptHookRDR2.dll", "SimpleHook.dll", "ModManager.Core.dll", "NativeInterop.dll", "EasyLoad64.dll", "EasyHook64.dll", "EasyHook.dll", "NLog.dll" };
                 for (int i = 0; i < oldNames.Length && i < newNames.Length; i++)
                 {
                     string oldName = oldNames[i];
@@ -118,7 +125,13 @@ public static class Utility
                         string newFileName = fileName.Replace(oldName, newName);
                         string newFilePath = Path.Combine(folderPath, newFileName);
 
-                        File.Move(filePath, newFilePath);
+                        File.Copy(filePath, newFilePath, true);
+
+                        if (File.Exists(newFilePath))
+                        {
+                            File.Delete(filePath);
+                        }
+
                         changes++;
                     }
                     else if (fileName.Contains(newName))
@@ -129,7 +142,7 @@ public static class Utility
             }
             if (changes == 0 && find == 0)
             {
-                MessageBox.Show("Modlar kapatılamadı uygulamanın RDR2 klasörü içerisinde olduğuna eminmisin? Ya da sadece scripthook ve lennys mod loader kurulu değil.");
+                MessageBox.Show("Modlar kapatılamadı, scripthook ve lennys mod loader'in kurulu olduğuna eminmisin?");
             }
             else if (changes == 0)
             {
